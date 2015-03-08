@@ -1,0 +1,9 @@
+################################################################################
+##
+## Survival analysis of times between champions
+##
+################################################################################
+
+
+## Read data
+rotations = read.csv("~/LOL/predict_free_rotation/data/historic-raw-rotations.csv")

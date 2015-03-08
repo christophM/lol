@@ -1,0 +1,8 @@
+library("ggplot2")
+
+rot_times = read.csv("../../data/rotation_times.csv")
+rot_times$date <- as.Date(rot_times$date)
+head(rot_times)
+
+
+ggplot(rot_times) + geom_boxplot(aes(x = event, y = weeks, group = Champion))
