@@ -1,4 +1,7 @@
 
+# data for victory model
+game-timeline-*.json
+timelines_df.csv
 
 # old code 
 lol-old/
