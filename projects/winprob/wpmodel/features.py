@@ -17,6 +17,32 @@ def get_winner(match, reference_teamId=100):
     return filter(lambda x: x["teamId"] == reference_teamId, match["teams"])[0]["winner"]
 
 
+def get_teamId(match, summonerId):
+    """
+    Input: Match dictionary and the summonerId
+    Output: The ID of the team the summoner was in for this match
+    """
+    ## Find participantId for summonerId
+    participantId = get_participantId(match, summonerId)
+    ## Find and return teamId for summonerId
+    return filter(lambda x: x["participantId"] == participantId, match["participants"])[0]["teamId"]
+
+def get_participantId(match, summonerId):
+    """
+    Input: Match dictionary and the summonerId
+    Output: The participant ID the summoner was given for this game
+    """
+    return filter(lambda x: x["player"]["summonerId"] == summonerId, match["participantIdentities"])[0]["participantId"]
+
+def get_summoner_win(match, summonerId):
+    """
+    Input: Match dictionary and the summonerId
+    Output: 
+    """
+    summoner_team = get_teamId(match, summonerId)
+    return get_winner(match, reference_teamId=summoner_team)
+
+
 def get_labels(matches, reference_teamId=100):
     """
     Input: List of matches and the reference team id
@@ -60,6 +86,8 @@ def filter_team_events(events, team, team_100, id_field="killerId"):
 def frame_events_to_dict(events, team_100):
     """
     Extract features from the events, which contain neutral objectives, kill, shopping and lots more
+    TODO: 
+    Write tests for event summaries. In match["teams"] there is a summary of the events which could be used.
     """
     results = {}
 
@@ -193,8 +221,6 @@ def compute_additional_experiment_features(matches):
     matches["kill_inner_100_sum"] = matches.groupby(level=0).kill_inner_100.cumsum()
     matches["kill_inner_200_sum"] = matches.groupby(level=0).kill_inner_200.cumsum()
     return matches
-
-
 
 
 
