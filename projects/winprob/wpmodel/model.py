@@ -57,7 +57,7 @@ class WinProbabilityPipeline():
 if __name__ == "__main__":
     wp = WinProbabilityPipeline()
     matches_dir = "../data/timelines"
-    matches = wp.load_matches(matches_dir)[0:10]
+    matches = wp.load_matches(matches_dir)
     print "Training random forest"
     wp.train(matches)
     print "Writing pipeline to disk"
