@@ -31,7 +31,7 @@ class WinProbabilityPipeline():
         clf = RandomForestClassifier(n_estimators=200, verbose=0, min_samples_leaf=100, 
                                  min_samples_split=100, random_state=42, n_jobs=2)        
         self.pipeline = Pipeline([("build features", fb), ("classifier", clf)])
-        labels = get_labels(matches)
+        labels = get_labels(matches).values
         self.pipeline.fit(matches, labels)
         
 
@@ -57,6 +57,7 @@ class WinProbabilityPipeline():
 if __name__ == "__main__":
     wp = WinProbabilityPipeline()
     matches_dir = "../data/timelines"
+    print "Loading data"
     matches = wp.load_matches(matches_dir)
     print "Training random forest"
     wp.train(matches)
