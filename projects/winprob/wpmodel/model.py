@@ -5,6 +5,7 @@ match dictionairy -> win probability path
 """
 import json
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
 import pandas as pd
 import numpy as np
 from features import FeatureBuilder, get_labels
@@ -28,10 +29,11 @@ class WinProbabilityPipeline():
 
     def train(self, matches):
         fb = FeatureBuilder(kind="production")
-        clf = RandomForestClassifier(n_estimators=200, verbose=0, min_samples_leaf=100, 
-                                 min_samples_split=100, random_state=42, n_jobs=2)        
+        ##clf = RandomForestClassifier(n_estimators=200, verbose=0, min_samples_leaf=100, 
+        ##                         min_samples_split=100, random_state=42, n_jobs=2)        
+        clf = LogisticRegression()
         self.pipeline = Pipeline([("build features", fb), ("classifier", clf)])
-        labels = get_labels(matches).values
+        labels = get_labels(matches).winner
         self.pipeline.fit(matches, labels)
         
 
@@ -59,7 +61,7 @@ if __name__ == "__main__":
     matches_dir = "../data/timelines"
     print "Loading data"
     matches = wp.load_matches(matches_dir)
-    print "Training random forest"
+    print "Training win probability model"
     wp.train(matches)
     print "Writing pipeline to disk"
     wp.to_file("../model-serialized/wp-pipeline.pkl")
