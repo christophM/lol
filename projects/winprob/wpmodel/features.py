@@ -56,7 +56,7 @@ def get_labels(matches, reference_teamId=100):
         label_frames.append(pd.DataFrame({"winner": winner, "matchId": matchId, "timestamp": timestamps}))
     
     labels = pd.concat(label_frames)                
-    labels = labels[labels.timestamp != 0]
+#    labels = labels[labels.timestamp != 0]
     labels.set_index(["matchId", "timestamp"], inplace=True)
     return labels
 
@@ -172,7 +172,7 @@ def match_to_dataset(match):
     winner_100 =  get_winner(match)
     match_dict = {"winner_100": winner_100, "matchId": match["matchId"]}
     ## first frame is not informative
-    frames = match["timeline"]["frames"][1:]
+    frames = match["timeline"]["frames"]#[1:]
     dataset = [frame_to_dict(frame=frame, match_dict=match_dict, team_100=team_100) for frame in frames]
     return dataset
 
