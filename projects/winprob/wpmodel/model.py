@@ -12,6 +12,8 @@ from features import FeatureBuilder, get_labels
 from sklearn.pipeline import Pipeline
 import cPickle
 import os
+from visualize import plot_winprobability
+
 
 class WinProbabilityPipeline():
 
@@ -35,7 +37,6 @@ class WinProbabilityPipeline():
         self.pipeline = Pipeline([("build features", fb), ("classifier", clf)])
         labels = get_labels(matches).winner
         self.pipeline.fit(matches, labels)
-        
 
     def load_match(self, filename, matches_dir):
         with open(matches_dir + "/" + filename) as f:
@@ -65,3 +66,8 @@ if __name__ == "__main__":
     wp.train(matches)
     print "Writing pipeline to disk"
     wp.to_file("../model-serialized/wp-pipeline.pkl")
+    match_ex = matches[42]
+    timestamps = [x["timestamp"] / 60000 for x in match_ex["timeline"]["frames"]]
+    winprob = wp.predict(match_ex)
+    plot_winprobability(timestamps, winprob)
+    
