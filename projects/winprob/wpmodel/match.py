@@ -5,7 +5,7 @@ Class to represent one match
 
 
 class Match():
-""" Class for league of legends from the view of a single player"""
+    """ Class for league of legends from the view of a single player"""
 
     def __init__(self, match_dict, summonerId):
         """ Extracts the first infos of the match
@@ -15,6 +15,8 @@ class Match():
         """
         self.match = match_json
         self.summonerId = summonerId
+        self.timestamps = [x["timestamp"] for x in self.match["timeline"]["frames"]]
+        self.durance = max(self.timestamps)
         
         ## MatchId
         self.matchId = self.match["matchId"]
