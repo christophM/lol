@@ -1,62 +1,23 @@
 ## Module to extract features from the timelines
 import numpy as np
 import pandas as pd
+from match import Match
 
 
-def get_team_memberids(match, reference_teamId=100):
-    """
-    Return a dictionary with participant -> team
-    """
-    return [x["participantId"] for x in match["participants"] if  x["teamId"] == 100]
-
-
-def get_winner(match, reference_teamId=100):
-    """
-    Extract id of winning team
-    """
-    return filter(lambda x: x["teamId"] == reference_teamId, match["teams"])[0]["winner"]
-
-
-def get_teamId(match, summonerId):
-    """
-    Input: Match dictionary and the summonerId
-    Output: The ID of the team the summoner was in for this match
-    """
-    ## Find participantId for summonerId
-    participantId = get_participantId(match, summonerId)
-    ## Find and return teamId for summonerId
-    return filter(lambda x: x["participantId"] == participantId, match["participants"])[0]["teamId"]
-
-def get_participantId(match, summonerId):
-    """
-    Input: Match dictionary and the summonerId
-    Output: The participant ID the summoner was given for this game
-    """
-    return filter(lambda x: x["player"]["summonerId"] == summonerId, match["participantIdentities"])[0]["participantId"]
-
-def get_summoner_win(match, summonerId):
-    """
-    Input: Match dictionary and the summonerId
-    Output: 
-    """
-    summoner_team = get_teamId(match, summonerId)
-    return get_winner(match, reference_teamId=summoner_team)
-
-
-def get_labels(matches, reference_teamId=100):
+def get_labels(matches):
     """
     Input: List of matches and the reference team id
     Output: A vector with size equal the sum of all (match lengths - 1). Each entry indicates if the reference has won in this match
     """
     label_frames = []
     for match in matches: 
-        winner = get_winner(match, reference_teamId)
-        matchId = match["matchId"]
-        timestamps =  [frame["timestamp"] / 60000 for frame in match["timeline"]["frames"]]
+        match = Match(match)
+        winner = match.win
+        matchId = match.matchId
+        timestamps =  match.timestamps
         label_frames.append(pd.DataFrame({"winner": winner, "matchId": matchId, "timestamp": timestamps}))
     
     labels = pd.concat(label_frames)                
-#    labels = labels[labels.timestamp != 0]
     labels.set_index(["matchId", "timestamp"], inplace=True)
     return labels
 
@@ -168,11 +129,11 @@ def match_to_dataset(match):
     """
     Take a match dict and turn it into a pandas dataset row
     """
-    team_100 = get_team_memberids(match)
-    winner_100 =  get_winner(match)
-    match_dict = {"winner_100": winner_100, "matchId": match["matchId"]}
+    team_100 = match.team_members
+    winner_100 =  match.win
+    match_dict = {"winner_100": winner_100, "matchId": match.matchId}
     ## first frame is not informative
-    frames = match["timeline"]["frames"]#[1:]
+    frames = match.match["timeline"]["frames"]#[1:]
     dataset = [frame_to_dict(frame=frame, match_dict=match_dict, team_100=team_100) for frame in frames]
     return dataset
 
@@ -189,7 +150,7 @@ def matches_to_experiment_dataframe(matches_dict):
     Output: Pandas dataframe where each row represents one minute of a game with all its features
     This function computes lots of features and is for experimentation and training of the random forest
     """
-    data_rows =  [match_to_dataset(match) for match in matches_dict if "timeline" in match]
+    data_rows =  [match_to_dataset(Match(match)) for match in matches_dict if "timeline" in match]
     data_rows_flattened = [item for sublist in data_rows for item in sublist]
     matches_df = pd.DataFrame(data_rows_flattened)
     matches_df = matches_df.reset_index()
