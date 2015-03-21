@@ -30,7 +30,7 @@ def get_last_game_winprob(region, summonerId):
     match_history = rawpi.get_matchhistory(region, summonerId)
     match_history = json.loads(match_history.text)["matches"]
     match_ids = [x["matchId"] for x in match_history]
-    matchId = match_ids[9]
+    matchId = match_ids[len(match_ids) - 1]
     print matchId
     ## download last match
     match = Match(json.loads(rawpi.get_match(region=region, matchId=matchId, includeTimeline=True).text), summonerId)
