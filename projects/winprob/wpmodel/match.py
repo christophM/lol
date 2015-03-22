@@ -1,7 +1,11 @@
 """
 Class to represent one match
 """
-
+import datetime
+import sys
+sys.path.append('../../../lib/')
+import rawpi
+import json
 
 
 class Match():
@@ -33,18 +37,35 @@ class Match():
         self.win = filter(lambda x: x["teamId"] == self.teamId, 
                           self.match["teams"])[0]["winner"]
         self.winprob = None
+        ## Ugly hacked
+        self.date = datetime.datetime.fromtimestamp(self.match["matchCreation"] / 100)
+        self.region = self.match["region"].lower()
 
 
     def get_victory(self): 
         return self.win
     
     def set_winprob(self, winprob):
+        """Add the win probability for the match"""
         if len(winprob) != len(self.timestamps):
             raise Exception("Win probability array must match the timeline")
         self.winprob = winprob
 
     def get_winprob(self):
+        """ Get the win probability path for the match"""
         if self.winprob is None:
             raise Exception("Must set win probability first")
 
         return self.winprob
+
+        
+    def get_participant_summary(self, participantId=None):
+        """Extract the stats for the participant"""
+        if not participantId:
+            participantId = self.participantId
+        player = filter(lambda x: x["participantId"] == self.participantId, self.match["participants"])[0]
+        stats = player["stats"]
+        champ = rawpi.get_champion_list_by_id(self.region, player["championId"])
+        stats.setdefault("champion", json.loads(champ.text)["name"])
+        ## kills, deaths, assists, champion name, gold, minion kills,  role (nice-to-have)
+        return stats

@@ -44,6 +44,7 @@ def get_last_game_winprob(region, summonerId):
     print match.win
     match.set_winprob(winprob)
     print summarize_important_events(match)
+    print match.get_participant_summary()
     call(["open", "winprob.png"])
 
 

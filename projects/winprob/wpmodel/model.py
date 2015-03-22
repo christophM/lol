@@ -69,5 +69,6 @@ if __name__ == "__main__":
     match_ex = Match(matches[44])
     timestamps = match_ex.timestamps
     winprob = wp.predict(match_ex.match)
-    plot_winprobability(timestamps, winprob)
+    match_ex.set_winprob(winprob)
+    
     
