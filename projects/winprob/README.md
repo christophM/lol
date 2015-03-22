@@ -4,6 +4,10 @@ ___
 
 Predict which team will win a league of legends game based on in-game informations like gold difference.
 
+This project uses virtualenv. For working on this project active the virtual Python environemtn with:
+```
+source venv/bin/activate
+```
 
 Directory structure: 
 ___
