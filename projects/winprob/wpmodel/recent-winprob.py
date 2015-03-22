@@ -5,6 +5,7 @@ import json
 from model import WinProbabilityPipeline
 from match import Match
 from visualize import plot_winprobability
+from events import summarize_important_events
 from subprocess import call
 
 
@@ -41,6 +42,8 @@ def get_last_game_winprob(region, summonerId):
     winprob = wp.predict(match.match, match.teamId)
     plot_winprobability(timestamps, winprob)
     print match.win
+    match.set_winprob(winprob)
+    print summarize_important_events(match)
     call(["open", "winprob.png"])
 
 
