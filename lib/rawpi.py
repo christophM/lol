@@ -4,6 +4,14 @@ import requests
 __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
+
+# TODO
+# write decorator for error catching
+# write decorator (or whatever works best) for caching results
+#    see: https://wiki.python.org/moin/PythonDecoratorLibrary#Memoize
+
+
+
 # THIS HANDLES NO ERRORS AND IS JUST A RAW CONNECTION TO THE LOL API;
 # USE THE API MODULE TO GET ERROR FALLBACK METHODS
 
