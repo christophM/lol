@@ -2,6 +2,7 @@
 import numpy as np
 import pandas as pd
 from match import Match
+from events import filter_events, filter_team_events
 
 
 def get_labels(matches):
@@ -21,30 +22,7 @@ def get_labels(matches):
     labels.set_index(["matchId", "timestamp"], inplace=True)
     return labels
 
-def filter_events(events, event_type, filter_fun=lambda x: x):
-    """
-    INPUT:
-        events: from game frame
-        event_type: that should be filtered and returned
-        filter_fun: additional filter function for the events
-    """
-    return filter(lambda x: x["eventType"] == event_type and filter_fun(x), events)
-
-
-def filter_team_events(events, team, team_100, id_field="killerId"):
-    """
-    Return events that belong to a specific team. 
-    Input: event list, team id that should be filtered, list of participantIds for team_100, id_field used for filtering
-    Output: event list only containing events from specified team
-    """
-    if team == 100:
-        player_ids = team_100
-    else:
-        player_ids = np.setdiff1d(range(1, 10), team_100)
-    return [event for event in events if event[id_field] in player_ids]
-
-
-def frame_events_to_dict(events, team_100):
+def frame_events_to_dict(events, team_members):
     """
     Extract features from the events, which contain neutral objectives, kill, shopping and lots more
     TODO: 
@@ -54,27 +32,27 @@ def frame_events_to_dict(events, team_100):
 
     dragon_kill = filter_events(events, u'ELITE_MONSTER_KILL', lambda x: x[u'monsterType'] ==  u"DRAGON")
 
-    dragon_100 = len(filter_team_events(dragon_kill, 100, team_100))
-    dragon_200 = len(filter_team_events(dragon_kill, 200, team_100))
+    dragon_100 = len(filter_team_events(dragon_kill, team_members, enemy=False))
+    dragon_200 = len(filter_team_events(dragon_kill, team_members, enemy=True))
 
     results.setdefault("dragon_kill_100", dragon_100)
     results.setdefault("dragon_kill_200", dragon_200)
 
     champion_kills = filter_events(events, 'CHAMPION_KILL')
-    results.setdefault("champion_kill_100", len(filter_team_events(champion_kills, 100, team_100)))
-    results.setdefault("champion_kill_200", len(filter_team_events(champion_kills, 200, team_100)))
+    results.setdefault("champion_kill_100", len(filter_team_events(champion_kills, team_members, enemy=False)))
+    results.setdefault("champion_kill_200", len(filter_team_events(champion_kills, team_members, enemy=True)))
 
 
     building_kills = filter_events(events, "BUILDING_KILL")
 
     if len(building_kills) > 0:
-        building_kills_100 = len(filter_team_events(building_kills, 100, team_100))
-        building_kills_200 = len(filter_team_events(building_kills, 200, team_100))
+        building_kills_100 = len(filter_team_events(building_kills, team_members, enemy=False))
+        building_kills_200 = len(filter_team_events(building_kills, team_members, enemy=True))
 
-        inner_kills_100 = len([kill for kill in building_kills if (kill["towerType"] == u'INNER_TURRET' and  kill["killerId"] in team_100)])
-        inner_kills_200 = len([kill for kill in building_kills if (kill["towerType"] == u'INNER_TURRET' and kill["killerId"] not in team_100)])
-        inhibitor_kills_100 =  len([kill for kill in building_kills if (kill['buildingType'] == u'INHIBITOR_BUILDING' and kill["killerId"] in team_100)])
-        inhibitor_kills_200 =  len([kill for kill in building_kills if (kill['buildingType'] == u'INHIBITOR_BUILDING' and kill["killerId"] not in team_100)])
+        inner_kills_100 = len([kill for kill in building_kills if (kill["towerType"] == u'INNER_TURRET' and  kill["killerId"] in team_members)])
+        inner_kills_200 = len([kill for kill in building_kills if (kill["towerType"] == u'INNER_TURRET' and kill["killerId"] not in team_members)])
+        inhibitor_kills_100 =  len([kill for kill in building_kills if (kill['buildingType'] == u'INHIBITOR_BUILDING' and kill["killerId"] in team_members)])
+        inhibitor_kills_200 =  len([kill for kill in building_kills if (kill['buildingType'] == u'INHIBITOR_BUILDING' and kill["killerId"] not in team_members)])
 
         results.setdefault("building_kill_100", building_kills_100)
         results.setdefault("building_kill_200", building_kills_200)
@@ -85,12 +63,12 @@ def frame_events_to_dict(events, team_100):
 
     return results
 
-def frame_participant_to_dict(pframes, team_100):
+def frame_participant_to_dict(pframes, team_members):
     """
     Extract features from the participantFrames, which contain gold, minionkills, junglekills, level
     """
-    pframes_100 = [v for k, v in pframes.iteritems() if int(k) in team_100]
-    pframes_200 = [v for k, v in pframes.iteritems() if int(k) not in team_100]
+    pframes_100 = [v for k, v in pframes.iteritems() if int(k) in team_members]
+    pframes_200 = [v for k, v in pframes.iteritems() if int(k) not in team_members]
 
     sum_of_gold_100 = np.sum([x["totalGold"] for x in pframes_100])
     sum_of_gold_200 = np.sum([x["totalGold"] for x in pframes_200])
@@ -104,19 +82,19 @@ def frame_participant_to_dict(pframes, team_100):
                "level_sum_100": level_sum_100, "level_sum_200": level_sum_200}
     return result
 
-def frame_to_dict(frame, match_dict, team_100):
+def frame_to_dict(frame, match_dict, team_members):
     """
     Extract one frame from the timeline(frames) and build features and add label
     INPUT:
         frame is one frame of the timeline
         match_dict is a dictionary with the label and features that are the same for the whole match
-        team_100 is the list of ids for member of team with id of 100
+        team_members is the list of ids for member of team with id of 100
     OUTPUT:
         dictionairy with label and features for one frame
     """
-    participants_dict = frame_participant_to_dict(frame["participantFrames"], team_100)
+    participants_dict = frame_participant_to_dict(frame["participantFrames"], team_members)
     if "events" in frame:
-        events_dict = frame_events_to_dict(frame["events"], team_100)
+        events_dict = frame_events_to_dict(frame["events"], team_members)
     else:
         events_dict = {}
 
@@ -129,12 +107,12 @@ def match_to_dataset(match):
     """
     Take a match dict and turn it into a pandas dataset row
     """
-    team_100 = match.team_members
+    team_members = match.team_members
     winner_100 =  match.win
     match_dict = {"winner_100": winner_100, "matchId": match.matchId}
     ## first frame is not informative
     frames = match.match["timeline"]["frames"]#[1:]
-    dataset = [frame_to_dict(frame=frame, match_dict=match_dict, team_100=team_100) for frame in frames]
+    dataset = [frame_to_dict(frame=frame, match_dict=match_dict, team_members=team_members) for frame in frames]
     return dataset
 
 

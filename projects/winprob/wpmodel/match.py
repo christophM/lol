@@ -32,7 +32,19 @@ class Match():
         ## Extract if player won
         self.win = filter(lambda x: x["teamId"] == self.teamId, 
                           self.match["teams"])[0]["winner"]
+        self.winprob = None
 
 
     def get_victory(self): 
         return self.win
+    
+    def set_winprob(self, winprob):
+        if len(winprob) != len(self.timestamps):
+            raise Exception("Win probability array must match the timeline")
+        self.winprob = winprob
+
+    def get_winprob(self):
+        if self.winprob is None:
+            raise Exception("Must set win probability first")
+
+        return self.winprob
