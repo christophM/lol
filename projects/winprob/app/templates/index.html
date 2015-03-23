@@ -1,4 +1,20 @@
 {% extends "base.html" %}
 {% block content %}
 SEARCH BAR
+  <form action="/index" method="POST" name="search">
+    <!--TODO: Add crsf with from.hidden_tag() -->
+    {{ form.hidden_tag() }}
+      <p>
+	Please choose your region:<br>
+          {{ form.region() }}<br>
+      </p>
+      <p>
+	Please type in your summoner name: <br>
+	{{ form.summoner() }}
+      </p>
+      <p><input type="submit" value="Get match"></p>
+  </form>
+<p>
+<img src="../../winprob.png" />
+</p>
 {% endblock %}
