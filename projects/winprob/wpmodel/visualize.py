@@ -14,7 +14,6 @@ def plot_winprobability(timestamps, winprob, filename="winprob.png"):
     """
     fig = create_winprobability_fig(timestamps, winprob)
     fig.savefig(filename)
-#    fig.close()
     return filename
 
 
@@ -59,6 +58,7 @@ def create_winprobability_fig(timestamps, winprob):
     ## Add a grid
     wp_plt.grid(color="lightgrey", linewidth=1)
     wp_plt.plot((1, match_durance + 1), (0.5, 0.5), 'k-', color = "tomato", linestyle='-')
+    fig_to_png_string(fig)
     return fig
 
 
