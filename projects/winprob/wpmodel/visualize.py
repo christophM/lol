@@ -29,12 +29,12 @@ def create_winprobability_fig(timestamps, winprob):
     winprob - vector of win probabilities
     filename - name of the file where the plot will be saved
     """
-    fig = Figure()
+    fig = Figure(figsize = (24, 12))
     ## color for plot
     bg_color = np.array([2, 32, 39]) / float(255)
     match_durance = max(timestamps)
     plt.figure(1, figsize = (24,12))
-    wp_plt = plt.subplot(111, axisbg = bg_color)
+    wp_plt = fig.add_subplot(111, axisbg = bg_color)
     #ax.append(aPlot)
     wp_plt.plot(timestamps, winprob,
                 color = 'goldenrod', linewidth=4,
