@@ -1,5 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import StringIO
+from matplotlib.figure import Figure
 
 
 
@@ -10,12 +12,28 @@ def plot_winprobability(timestamps, winprob, filename="winprob.png"):
     winprob - vector of win probabilities
     filename - name of the file where the plot will be saved
     """
-    plt.close("all")
+    plot = create_winprobability_fig(timestamps, winprob)
+    plt.savefig(filename)
+    plt.close()
+    return filename
+
+
+def plt_to_png_string(plt):
+    pass
+
+
+def create_winprobability_fig(timestamps, winprob):
+    """Plot and save win probability
+
+    Keyword arguments
+    winprob - vector of win probabilities
+    filename - name of the file where the plot will be saved
+    """
+    fig = Figure()
     ## color for plot
     bg_color = np.array([2, 32, 39]) / float(255)
     match_durance = max(timestamps)
     plt.figure(1, figsize = (24,12))
-    #aPlot =
     wp_plt = plt.subplot(111, axisbg = bg_color)
     #ax.append(aPlot)
     wp_plt.plot(timestamps, winprob,
@@ -35,6 +53,6 @@ def plot_winprobability(timestamps, winprob, filename="winprob.png"):
     ## Add a grid
     wp_plt.grid(color="lightgrey", linewidth=1)
     wp_plt.plot((1, match_durance + 1), (0.5, 0.5), 'k-', color = "tomato", linestyle='-')
-    plt.savefig(filename)
-    plt.close()
-    return filename
+    return wp_plt
+
+
