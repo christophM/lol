@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import StringIO
 from matplotlib.pylab import figure
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
 
 
@@ -9,6 +10,7 @@ def plot_winprobability(timestamps, winprob, filename="winprob.png"):
     """Plot and save win probability
 
     Keyword arguments
+    timestamps - vector of timestamps
     winprob - vector of win probabilities
     filename - name of the file where the plot will be saved
     """
@@ -16,23 +18,36 @@ def plot_winprobability(timestamps, winprob, filename="winprob.png"):
     fig.savefig(filename)
     return filename
 
+def get_winprobability_string_png(timestamps, winprob):
+    """ Get winprobability plot as png string
+    
+    Keyword arguments
+    timestamps - vector of timestamps
+    winprob - vector of win probabilities
+    """
+    fig = create_winprobability_fig(timestamps, winprob)
+    return fig_to_png_string(fig)
 
 def fig_to_png_string(fig):
+    """Turn a matplot into a png string representation
+    
+    Keyword arguments: 
+    fig - a matplot figure
+    """
     canvas=FigureCanvas(fig)
     png_output = StringIO.StringIO()
     canvas.print_png(png_output)
     png_output = png_output.getvalue().encode("base64")
-    print png_output
     return png_output
     
 
 
 def create_winprobability_fig(timestamps, winprob):
-    """Plot and save win probability
+    """Create win probability figure
 
     Keyword arguments
+    timestamps - vector with timestamps
     winprob - vector of win probabilities
-    filename - name of the file where the plot will be saved
     """
     fig = figure(figsize = (24, 12))
     ## color for plot
@@ -58,7 +73,6 @@ def create_winprobability_fig(timestamps, winprob):
     ## Add a grid
     wp_plt.grid(color="lightgrey", linewidth=1)
     wp_plt.plot((1, match_durance + 1), (0.5, 0.5), 'k-', color = "tomato", linestyle='-')
-    fig_to_png_string(fig)
     return fig
 
 

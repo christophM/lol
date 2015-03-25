@@ -7,16 +7,21 @@ import winprob
 
 
 @app.route('/')
-@app.route('/index', methods=('GET', 'POST'))
+@app.route('/index')
 def index():
+    form = SummonerSearchForm()
+    return render_template('index.html', 
+                           form=form)
+
+
+@app.route('/match', methods=('GET', 'POST'))
+def match():
     image = None
     form = SummonerSearchForm()
     if form.validate_on_submit():
-        image = winprob.get_last_game_winprob(form.region.data, form.summoner.data)
-    return render_template('index.html', 
+        img_data = winprob.get_last_game_winprob(form.region.data, form.summoner.data, console=False)
+    return render_template('match.html', 
                            form=form, 
-                           image=image)
+                           img_data=img_data)
 
-@app.route('/success')
-def success():
-    winprob.get_last_game_winprob
+
