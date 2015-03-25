@@ -4,7 +4,7 @@ import rawpi
 import json
 from model import WinProbabilityPipeline
 from match import Match
-from visualize import plot_winprobability
+from visualize import plot_winprobability, get_winprobability_string_png
 from events import summarize_important_events
 from subprocess import call
 
@@ -18,15 +18,16 @@ def main(argvs):
     summonerName = argvs[2]
     print summonerName
     ## get summonerID
+    get_last_game_winprob(region, summonerName, console=True)
+
+
+def get_last_game_winprob(region, summonerName, filename="winprob.png", console=False):
     try:
         summonerId = json.loads(rawpi.get_summoner_by_name(region, summonerName).text)[summonerName]["id"]
     except: 
         print "Could not find summoner"
     print summonerId
-    get_last_game_winprob(region, summonerId)
 
-
-def get_last_game_winprob(region, summonerId):
     ## get last ten matches
     match_history = rawpi.get_matchhistory(region, summonerId)
     match_history = json.loads(match_history.text)["matches"]
@@ -37,15 +38,18 @@ def get_last_game_winprob(region, summonerId):
     match = Match(json.loads(rawpi.get_match(region=region, matchId=matchId, includeTimeline=True).text), summonerId)
     ## load pipeline
     wp = WinProbabilityPipeline()
-    wp.from_file("../model-serialized/wp-pipeline.pkl")
+    wp.from_file("/Users/chris/Projects/lol/projects/winprob/model-serialized/wp-pipeline.pkl")
     timestamps = match.timestamps
     winprob = wp.predict(match.match, match.teamId)
-    plot_winprobability(timestamps, winprob)
-    print match.win
-    match.set_winprob(winprob)
-    print summarize_important_events(match)
-    print match.get_participant_summary()
-    call(["open", "winprob.png"])
+    if console:
+        plot_winprobability(timestamps, winprob, filename=filename)
+        print match.win
+        match.set_winprob(winprob)
+        print summarize_important_events(match)
+        print match.get_participant_summary()
+        call(["open", "winprob.png"])
+    else:
+        return get_winprobability_string_png(timestamps, winprob)
 
 
 if __name__=="__main__":
