@@ -80,21 +80,33 @@ def summarize_important_events_one_frame(events_frame, team_members, participant
     participantId - the id of type int of the participant for which the events 
                     are extracted
     """
+    events = {}
+
     champion_kills =  filter_events(events_frame, "CHAMPION_KILL")
+
     champion_kills_summoner_team = filter_team_events(champion_kills, team_members, enemy=False)
+    if champion_kills_summoner_team:
+        events.setdefault("champ_kills_summoner_team", len(champion_kills_summoner_team))
+
     champion_kills_summoner = filter_events(champion_kills, "CHAMPION_KILL", lambda x: x["killerId"] == participantId)
+    if champion_kills_summoner:
+        events.setdefault("champ_kills_summoner", len(champion_kills_summoner))
+
     champion_kills_enemy_team = filter_team_events(champion_kills, team_members, enemy=True)
+    if champion_kills_enemy_team:
+        events.setdefault("champ_kills_enemy_team", len(champion_kills_enemy_team))
 
     dragon_kill = filter_events(events_frame, u'ELITE_MONSTER_KILL', lambda x: x[u'monsterType'] ==  u"DRAGON")
-    dragon_summoner_team = len(filter_team_events(dragon_kill, team_members, enemy=False))
-    dragon_enemy_team = len(filter_team_events(dragon_kill, team_members, enemy=True))
+    dragon_summoner_team = filter_team_events(dragon_kill, team_members, enemy=False)
+    if dragon_summoner_team:
+        events.setdefault("dragon_summoner_team", len(dragon_summoner_team))
+
+    dragon_enemy_team = filter_team_events(dragon_kill, team_members, enemy=True)
+    if dragon_enemy_team:
+        events.setdefault("dragon_enemy_team", len(dragon_enemy_team))
 
     ## you killed n champs
     ## your team killed n champs
     ## your team killed dragon
     ## enemy team killed dragon
-    return {"champ_kills_summoner_team": len(champion_kills_summoner_team),
-            "champ_kills_summoner": len(champion_kills_summoner),
-            "champ_kills_enemy_team": len(champion_kills_enemy_team),
-            "dragon_summoner_team": dragon_summoner_team,
-            "dragon_enemy_team": dragon_enemy_team}
+    return events
