@@ -5,6 +5,11 @@ import sys
 sys.path.append("/Users/chris/Projects/lol/projects/winprob/wpmodel/")
 import winprob
 
+## TODO
+# - create WinProbabilityPipeline when initializing the app (__ini__.py ?)
+# - add additional information about the mach
+# - 
+
 
 @app.route('/')
 @app.route('/index')
@@ -19,7 +24,10 @@ def match():
     image = None
     form = SummonerSearchForm()
     if form.validate_on_submit():
-        img_data = winprob.get_last_game_winprob(form.region.data, form.summoner.data, console=False)
+        ## get back match 
+        ## get img-data
+        ## get additional information out of match
+        img_data = winprob.get_last_match_winprob(form.region.data, form.summoner.data, console=False)
     return render_template('match.html', 
                            form=form, 
                            img_data=img_data)

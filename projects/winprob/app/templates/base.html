@@ -3,19 +3,16 @@
     <title> Path to victory </title>
   </head>
   <body>
-    SEARCH BAR
   <form action="/match" method="POST" name="search">
     <!--TODO: Add crsf with from.hidden_tag() -->
     {{ form.hidden_tag() }}
       <p>
-	Please choose your region:<br>
-          {{ form.region() }}<br>
-      </p>
-      <p>
-	Please type in your summoner name: <br>
+	Region:
+          {{ form.region() }}
+	Summoner name:
 	{{ form.summoner() }}
       </p>
-      <p><input type="submit" value="Get match"></p>
+      <p><input type="submit" value="Show me!"></p>
   </form>
     {% block content %}{% endblock %}
   </body>
