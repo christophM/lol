@@ -1,6 +1,23 @@
 {% extends "base.html" %}
 {% block content %}
 <p>
-<img src="data:image/png;base64,{{img_data}}" width="900" />
+{{ summonerName }}'s latest match from {{ match.date }} 
 </p>
+<p>
+{{ summonerName }} {% if match.win %} won {% endif %} {%if not match.won %} lost {% endif %}
+</p>
+<p>  
+<img src="data:image/png;base64,{{img_data}}" width="900" />
+</br>
+TOP 3 events of the match: </br>
+{% for event in events %}
+Minute {{ event["timestamp"] }}: </br>
+Winprobability changed from {{ event["winprob_from"] }} &rarr; to {{ event["winprob_to"] }}
+<dl>
+      {% for key, value in event["summary"].iteritems() %}
+            <dt>{{ key }}</dt>
+            <dd>{{ value }}</dd>
+      {% endfor %}
+</dl>
+{% endfor %}
 {% endblock %}

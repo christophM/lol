@@ -68,7 +68,7 @@ def summarize_important_events(match, top=3):
         events_summary = summarize_important_events_one_frame(events, match.team_members, match.participantId)
         winprob_from = match.winprob[minute]
         winprob_to = match.winprob[minute + 1]
-        top_events.append({"minute": minute + 1, "winprob_from": winprob_from, "winprob_to": winprob_to, "summary": events_summary})
+        top_events.append({"timestamp": minute, "winprob_from": winprob_from, "winprob_to": winprob_to, "summary": events_summary})
     return top_events
 
 def summarize_important_events_one_frame(events_frame, team_members, participantId):
