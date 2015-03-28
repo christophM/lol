@@ -63,12 +63,15 @@ def summarize_important_events(match, top=3):
 
     top_minutes = get_top_n_minutes(match, n=top)
     top_events = []
+    def to_percentage(number):
+        return 100 * round(number, 4)
     for minute in top_minutes:
         events = get_events_by_timestamps(match, minute + 1)
         events_summary = summarize_important_events_one_frame(events, match.team_members, match.participantId)
-        winprob_from = match.winprob[minute]
-        winprob_to = match.winprob[minute + 1]
-        top_events.append({"timestamp": minute, "winprob_from": winprob_from, "winprob_to": winprob_to, "summary": events_summary})
+        winprob_jump = to_percentage(match.winprob[minute + 1] - match.winprob[minute])
+        winprob_from = to_percentage(match.winprob[minute])
+        winprob_to = to_percentage(match.winprob[minute + 1])
+        top_events.append({"timestamp": minute, "winprob_from": winprob_from, "winprob_to": winprob_to, "summary": events_summary, "winprob_jump": winprob_jump})
     return top_events
 
 def summarize_important_events_one_frame(events_frame, team_members, participantId):

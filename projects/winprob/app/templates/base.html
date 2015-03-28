@@ -1,19 +1,26 @@
 <html>
   <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title> Path to victory </title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
   </head>
   <body>
-  <form action="/match" method="POST" name="search">
-    <!--TODO: Add crsf with from.hidden_tag() -->
-    {{ form.hidden_tag() }}
+    <form action="/match" method="POST" name="search">
+      <!--TODO: Add crsf with from.hidden_tag() -->
+      {{ form.hidden_tag() }}
       <p>
-	Region:
-          {{ form.region() }}
-	Summoner name:
-	{{ form.summoner() }}
+        Region:
+        {{ form.region() }}
+        Summoner name:
+        {{ form.summoner() }}
       </p>
       <p><input type="submit" value="Show me!"></p>
-  </form>
+    </form>
     {% block content %}{% endblock %}
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
   </body>
 </html>

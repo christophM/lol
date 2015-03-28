@@ -1,23 +1,45 @@
 {% extends "base.html" %}
 {% block content %}
+<div class="page-header">
+<h1 class={% if match.win %}"text-success"{% else %}"text-danger"{% endif %}> {{ summonerName }}'s latest match from {{ match.date.strftime('%Y-%m-%d at %H:%M') }} </h1>
+</div>
 <p>
-{{ summonerName }}'s latest match from {{ match.date }} 
+<!-- {{ summonerName }} {% if match.win %} won {% endif %} {%if not match.won %} lost {% endif %} -->
 </p>
-<p>
-{{ summonerName }} {% if match.win %} won {% endif %} {%if not match.won %} lost {% endif %}
-</p>
-<p>  
+<div class="text-center">  
 <img src="data:image/png;base64,{{img_data}}" width="900" />
-</br>
-TOP 3 events of the match: </br>
+</div>
+
+
+<h2> TOP 3 events of the match:</h2>
+<table class="table table-striped">
+<thead>
+  <tr>
+    <th> Minute </th>
+    <th> Winprobability change </th>
+    <th> Events </th>
+  </tr>
+</thead>
 {% for event in events %}
-Minute {{ event["timestamp"] }}: </br>
-Winprobability changed from {{ event["winprob_from"] }} &rarr; to {{ event["winprob_to"] }}
+<tr> 
+<td> {{ event["timestamp"] }} </td>
+<td> 
+
+<p class={% if event["winprob_jump"] > 0 %}"text-success"{% else %}"text-danger"{% endif
+  %}}> 
+<big>{{ event["winprob_jump"] }}% </big>
+</p> 
+
+  ({{ event["winprob_from"] }}% &rarr; {{ event["winprob_to"] }}%)</td>
+<td>
 <dl>
       {% for key, value in event["summary"].iteritems() %}
             <dt>{{ key }}</dt>
             <dd>{{ value }}</dd>
       {% endfor %}
 </dl>
+</td>
+</tr>
 {% endfor %}
+</table>
 {% endblock %}
