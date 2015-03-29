@@ -8,17 +8,22 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
   </head>
   <body>
-    <form action="/match" method="POST" name="search">
-      <!--TODO: Add crsf with from.hidden_tag() -->
-      {{ form.hidden_tag() }}
-      <p>
-        Region:
-        {{ form.region() }}
-        Summoner name:
-        {{ form.summoner() }}
-      </p>
-      <p><input type="submit" value="Show me!"></p>
-    </form>
+    <nav class='navbar navbar-default navbar-static-top'>
+      <div class='container'>
+        <div class="navbar-header">
+        </div>
+        <form class="navbar-form navbar-center" action="/match" method="POST">
+          {{ form.hidden_tag() }}
+
+            Region:
+            {{ form.region() }}
+            Summoner name:
+            {{ form.summoner() }}
+
+<input type="submit" value="Show me!">
+        </form>
+      </div>
+    </nav>
     {% block content %}{% endblock %}
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>

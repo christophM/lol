@@ -37,13 +37,13 @@ def match():
         match.set_winprob(wp.predict(match.match, match.teamId))
         img_data = visualize.get_winprobability_string_png(match.timestamps, match.winprob)
         top_events = events.summarize_important_events(match)
-        # player = match.get_participant_summary()
+        player = match.get_participant_summary()
         return render_template('match.html', 
                                form=form, 
                                img_data=img_data, 
                                match=match, 
                                events=top_events,
-                               #player=player,
+                               player=player,
                                summonerName=form.summoner.data)
     else:
         return render_template('index.html', 

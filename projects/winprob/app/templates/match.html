@@ -1,45 +1,75 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="page-header">
-<h1 class={% if match.win %}"text-success"{% else %}"text-danger"{% endif %}> {{ summonerName }}'s latest match from {{ match.date.strftime('%Y-%m-%d at %H:%M') }} </h1>
+  <h1 class={% if match.win %}"text-success"{% else %}"text-danger"{% endif %}> {{ summonerName }}'s latest match from {{ match.date.strftime('%Y-%m-%d at %H:%M') }} </h1>
 </div>
-<p>
-<!-- {{ summonerName }} {% if match.win %} won {% endif %} {%if not match.won %} lost {% endif %} -->
-</p>
-<div class="text-center">  
-<img src="data:image/png;base64,{{img_data}}" width="900" />
+<div class="row">
+  <div class="col-md-2">
+    <div class="panel panel-info">
+      <ul class="list-group">
+	  <a href="#" class="list-group-item active">
+	    Summoner summary
+  </a>
+        <a class="list-group-item">
+          <span class="badge">    {{ player["champion"] }} </span>
+          Champion
+        </a>
+        <a class="list-group-item">
+          <span class="badge">    {{ player["kills"] }} </span>
+          Kills
+        </a>
+        <a class="list-group-item">
+          <span class="badge">    {{ player["deaths"] }} </span>
+          Assists
+        </a>
+        <a class="list-group-item">
+          <span class="badge">    {{ player["assists"] }} </span>
+          Deaths
+        </a>
+        <a class="list-group-item">
+          <span class="badge">    {{ player["minionsKilled"] }} </span>
+          Minions
+        </a>
+        <a class="list-group-item">
+          <span class="badge">    {{ player["goldEarned"] }} </span>
+          Gold
+        </a>
+      </ul>
+    </div>
+  </div>
+  <div class="col-md-10">
+    <img src="data:image/png;base64,{{img_data}}" width="900" />
+  </div>
 </div>
-
-
 <h2> TOP 3 events of the match:</h2>
 <table class="table table-striped">
-<thead>
+  <thead>
+    <tr>
+      <th> Minute </th>
+      <th> Winprobability change </th>
+      <th> Events </th>
+    </tr>
+  </thead>
+  {% for event in events %}
   <tr>
-    <th> Minute </th>
-    <th> Winprobability change </th>
-    <th> Events </th>
+    <td> {{ event["timestamp"] }} </td>
+    <td>
+
+      <p class={% if event["winprob_jump"] > 0 %}"text-success"{% else %}"text-danger"{% endif
+        %}}>
+        <big>{{ event["winprob_jump"] }}% </big>
+      </p>
+
+      ({{ event["winprob_from"] }}% &rarr; {{ event["winprob_to"] }}%)</td>
+    <td>
+      <dl>
+        {% for key, value in event["summary"].iteritems() %}
+        <dt>{{ key }}</dt>
+        <dd>{{ value }}</dd>
+        {% endfor %}
+      </dl>
+    </td>
   </tr>
-</thead>
-{% for event in events %}
-<tr> 
-<td> {{ event["timestamp"] }} </td>
-<td> 
-
-<p class={% if event["winprob_jump"] > 0 %}"text-success"{% else %}"text-danger"{% endif
-  %}}> 
-<big>{{ event["winprob_jump"] }}% </big>
-</p> 
-
-  ({{ event["winprob_from"] }}% &rarr; {{ event["winprob_to"] }}%)</td>
-<td>
-<dl>
-      {% for key, value in event["summary"].iteritems() %}
-            <dt>{{ key }}</dt>
-            <dd>{{ value }}</dd>
-      {% endfor %}
-</dl>
-</td>
-</tr>
-{% endfor %}
+  {% endfor %}
 </table>
 {% endblock %}
