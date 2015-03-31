@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container-fluid">
 <div class="page-header">
   <h1 class={% if match.win %}"text-success"{% else %}"text-danger"{% endif %}> {{ summonerName }}'s latest match from {{ match.date.strftime('%Y-%m-%d at %H:%M') }} </h1>
 </div>
@@ -73,5 +72,4 @@
   </tr>
   {% endfor %}
 </table>
-</div>
 {% endblock %}
