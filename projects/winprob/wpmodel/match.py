@@ -38,7 +38,7 @@ class Match():
                           self.match["teams"])[0]["winner"]
         self.winprob = None
         ## Ugly hacked
-        self.date = datetime.datetime.fromtimestamp(self.match["matchCreation"] / 100)
+        self.date = datetime.datetime.fromtimestamp(self.match["matchCreation"] / 1000)
         self.region = self.match["region"].lower()
 
 
