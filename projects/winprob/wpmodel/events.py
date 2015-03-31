@@ -89,24 +89,33 @@ def summarize_important_events_one_frame(events_frame, team_members, participant
 
     champion_kills_summoner_team = filter_team_events(champion_kills, team_members, enemy=False)
     if champion_kills_summoner_team:
-        events.setdefault("champ_kills_summoner_team", len(champion_kills_summoner_team))
+        events.setdefault("Kills by team", len(champion_kills_summoner_team))
 
     champion_kills_summoner = filter_events(champion_kills, "CHAMPION_KILL", lambda x: x["killerId"] == participantId)
     if champion_kills_summoner:
-        events.setdefault("champ_kills_summoner", len(champion_kills_summoner))
+        events.setdefault("Kills by summoner", len(champion_kills_summoner))
 
     champion_kills_enemy_team = filter_team_events(champion_kills, team_members, enemy=True)
     if champion_kills_enemy_team:
-        events.setdefault("champ_kills_enemy_team", len(champion_kills_enemy_team))
+        events.setdefault("Kills by enemy", len(champion_kills_enemy_team))
 
     dragon_kill = filter_events(events_frame, u'ELITE_MONSTER_KILL', lambda x: x[u'monsterType'] ==  u"DRAGON")
     dragon_summoner_team = filter_team_events(dragon_kill, team_members, enemy=False)
     if dragon_summoner_team:
-        events.setdefault("dragon_summoner_team", len(dragon_summoner_team))
+        events.setdefault("Dragon for team", len(dragon_summoner_team))
 
     dragon_enemy_team = filter_team_events(dragon_kill, team_members, enemy=True)
     if dragon_enemy_team:
-        events.setdefault("dragon_enemy_team", len(dragon_enemy_team))
+        events.setdefault("Dragon for enemy", len(dragon_enemy_team))
+        
+    baron_kill = filter_events(events_frame, u'ELITE_MONSTER_KILL', lambda x: x[u'monsterType'] == u"BARON")
+    baron_summoner_team = filter_team_events(baron_kill, team_members, enemy=False)
+    if baron_summoner_team:
+        events.setdefault("Baron for team", len(baron_summoner_team))
+
+    baron_enemy_team = filter_team_events(baron_kill, team_members, enemy=True)
+    if baron_enemy_team:
+        events.setdefault("Baron for enemy", len(baron_enemy_team))
 
     ## you killed n champs
     ## your team killed n champs

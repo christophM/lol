@@ -1,14 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="page-header">
-  <h1 class={% if match.win %}"text-success"{% else %}"text-danger"{% endif %}> {{ summonerName }}'s latest match from {{ match.date.strftime('%Y-%m-%d at %H:%M') }} </h1>
-</div>
 <div class="row">
   <div class="col-md-2">
+      <h1 class={% if match.win %}"text-success"{% else %}"text-danger"{% endif %}> {% if match.win %} Victory {% else %} Defeat {% endif %}  </h1> 
+      {{ match.date.strftime('%Y-%m-%d at %H:%M') }}
     <div class="panel panel-info">
       <ul class="list-group">
         <a href="#" class="list-group-item active">
-          Summoner summary
+	  {{ summonerName }}         
         </a>
         <a class="list-group-item">
           <span class="badge">    {{ player["champion"] }} </span>
@@ -41,12 +40,12 @@
     <img src="data:image/png;base64,{{img_data}}" width="900" />
   </div>
 </div>
-<h2> TOP 3 events of the match:</h2>
+<h2> Top match events</h2>
 <table class="table table-striped">
   <thead>
     <tr>
       <th> Minute </th>
-      <th> Winprobability change </th>
+      <th> Win probability impact </th>
       <th> Events </th>
     </tr>
   </thead>
@@ -62,12 +61,9 @@
 
       ({{ event["winprob_from"] }}% &rarr; {{ event["winprob_to"] }}%)</td>
     <td>
-      <dl>
         {% for key, value in event["summary"].iteritems() %}
-        <dt>{{ key }}</dt>
-        <dd>{{ value }}</dd>
+	{{ key }}: {{ value }} </br>
         {% endfor %}
-      </dl>
     </td>
   </tr>
   {% endfor %}
