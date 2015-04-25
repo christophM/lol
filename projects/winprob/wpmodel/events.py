@@ -78,47 +78,58 @@ def summarize_important_events_one_frame(events_frame, team_members, participant
     """Summarize one frames events
     
     Keyword arguments
-    events_frame - list of events as contained in a lol match (from api)
+    events_frame - list of events as contained in a lol match (from api). One event in 
+                   this list has the fields: team, summoner, target, verb
     team_members - list of int with the ids of the participants teams members
     participantId - the id of type int of the participant for which the events 
                     are extracted
     """
-    events = {}
+    events = []
 
     champion_kills =  filter_events(events_frame, "CHAMPION_KILL")
 
     champion_kills_summoner_team = filter_team_events(champion_kills, team_members, enemy=False)
     if champion_kills_summoner_team:
-        events.setdefault("Kills by team", len(champion_kills_summoner_team))
+        events.append({"who": "summoner_team", 
+                       "what": "champion_kill", 
+                       "count": len(champion_kills_summoner_team)})
 
     champion_kills_summoner = filter_events(champion_kills, "CHAMPION_KILL", lambda x: x["killerId"] == participantId)
     if champion_kills_summoner:
-        events.setdefault("Kills by summoner", len(champion_kills_summoner))
+        events.append({"who": "summoner", 
+                       "what": "champion_kill",
+                       "count": len(champion_kills_summoner)})
 
     champion_kills_enemy_team = filter_team_events(champion_kills, team_members, enemy=True)
     if champion_kills_enemy_team:
-        events.setdefault("Kills by enemy", len(champion_kills_enemy_team))
+        events.append({"who": "enemy_team", 
+                       "what": "champion_kill", 
+                       "count": len(champion_kills_enemy_team)})
 
     dragon_kill = filter_events(events_frame, u'ELITE_MONSTER_KILL', lambda x: x[u'monsterType'] ==  u"DRAGON")
     dragon_summoner_team = filter_team_events(dragon_kill, team_members, enemy=False)
     if dragon_summoner_team:
-        events.setdefault("Dragon for team", len(dragon_summoner_team))
+        events.append({"who": "summoner_team", 
+                       "what": "dragon_kill", 
+                       "count": 1})
 
     dragon_enemy_team = filter_team_events(dragon_kill, team_members, enemy=True)
     if dragon_enemy_team:
-        events.setdefault("Dragon for enemy", len(dragon_enemy_team))
+        events.append({"who": "enemy_team", 
+                       "what": "dragon_kill", 
+                       "count": 1})
         
     baron_kill = filter_events(events_frame, u'ELITE_MONSTER_KILL', lambda x: x[u'monsterType'] == u"BARON")
     baron_summoner_team = filter_team_events(baron_kill, team_members, enemy=False)
     if baron_summoner_team:
-        events.setdefault("Baron for team", len(baron_summoner_team))
+        events.append({"who": "summoner_team",
+                       "what": "baron_kill", 
+                       "count": 1})
 
     baron_enemy_team = filter_team_events(baron_kill, team_members, enemy=True)
     if baron_enemy_team:
-        events.setdefault("Baron for enemy", len(baron_enemy_team))
+        events.append({"who": "enemy_team",
+                       "what": "baron_kill", 
+                       "count": 1})
 
-    ## you killed n champs
-    ## your team killed n champs
-    ## your team killed dragon
-    ## enemy team killed dragon
     return events

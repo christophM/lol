@@ -64,8 +64,8 @@
 
       ({{ event["winprob_from"] }}% &rarr; {{ event["winprob_to"] }}%)</td>
     <td>
-        {% for key, value in event["summary"].iteritems() %}
-	{{ key }}: {{ value }} </br>
+        {% for item in event["summary"] %}
+	{{ item }} </br>
         {% endfor %}
     </td>
   </tr>
