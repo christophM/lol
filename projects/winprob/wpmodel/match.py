@@ -58,6 +58,23 @@ class Match():
 
         return self.winprob
 
+    def get_winprob_dataframe(self):
+        """ Get the win probability path for the match
+            This will return a list of dict """
+        if self.winprob is None:
+            raise Exception("Must set win probability first")
+        
+        timeline = []
+        for timestamp in self.timestamps[1:]:
+            if timestamp == 1:
+                winprob_before = 0.5
+            else:
+                winprob_before = self.winprob[timestamp - 2]
+            timeline.append({"timestamp": timestamp, 
+                             "winprob_now": self.winprob[timestamp - 1],
+                             "winprob_before": winprob_before})
+        return timeline
+
         
     def get_participant_summary(self, participantId=None):
         """Extract the stats for the participant"""

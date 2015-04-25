@@ -35,12 +35,11 @@ def match():
         summoner_name = form.summoner.data.lower()
         match = winprob.get_last_match(region=form.region.data, summonerName=summoner_name)
         match.set_winprob(wp.predict(match.match, match.teamId))
-        img_data = visualize.get_winprobability_string_png(match.timestamps, match.winprob)
+        winprob_line = match.get_winprob()
         top_events = events.summarize_important_events(match)
         player = match.get_participant_summary()
         return render_template('match.html', 
                                form=form, 
-                               img_data=img_data, 
                                match=match, 
                                events=top_events,
                                player=player,
