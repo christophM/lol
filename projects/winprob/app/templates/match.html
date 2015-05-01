@@ -46,35 +46,6 @@
 
   </div>
 </div>
-<h2> Top match events</h2>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th> Minute </th>
-      <th> Win probability impact </th>
-      <th> Events </th>
-    </tr>
-  </thead>
-  {% for event in events %}
-  <tr>
-    <td> {{ event["timestamp"] }} </td>
-    <td>
-
-      <p class={% if event["winprob_jump"] > 0 %}"text-success"{% else %}"text-danger"{% endif
-        %}}>
-        <big>{{ event["winprob_jump"] }}% </big>
-      </p>
-
-      ({{ event["winprob_from"] }}% &rarr; {{ event["winprob_to"] }}%)</td>
-    <td>
-        {% for item in event["summary"] %}
-	{{ item }} </br>
-        {% endfor %}
-    </td>
-  </tr>
-  {% endfor %}
-</table>
-
 <script>
 // TODO: Move all the styling to CSS
 // TODO: Add events by adding circles on top of the line
