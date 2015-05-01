@@ -2,8 +2,6 @@
 Class to represent one match
 """
 import datetime
-import sys
-sys.path.append('../../../lib/')
 import rawpi
 import json
 

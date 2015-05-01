@@ -12,7 +12,6 @@ from features import FeatureBuilder, get_labels
 from sklearn.pipeline import Pipeline
 import cPickle
 import os
-from visualize import plot_winprobability
 from match import Match
 
 class WinProbabilityPipeline():

@@ -1,15 +1,12 @@
 from flask import render_template, flash, redirect, request
 from app import app
 from .forms import SummonerSearchForm
-import sys
-sys.path.append("/Users/chris/Projects/lol/projects/winprob/wpmodel/")
+
 import winprob
-import visualize
 import events
 import model
+from constants import PREDICTION_MODEL_PATH
 
-
-PREDICTION_MODEL_PATH = "/Users/chris/Projects/lol/projects/winprob/model-serialized/wp-pipeline.pkl"
 wp =  model.WinProbabilityPipeline()
 wp.from_file(PREDICTION_MODEL_PATH)
 
