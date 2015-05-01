@@ -12,6 +12,7 @@
 body {
     font: 12px Arial;
     background-color: #022027;
+    color: #d3d3d3
 }
 path {
     stroke: black;
@@ -34,11 +35,27 @@ path {
 .axis {
     fill: grey
 }
+
+.navbar {
+     background-color: #022027;
 }
+
+
+.panel, .list-group-item {
+    border: 0px;
+    color: #d3d3d3;
+    background: #022027;
+}
+
+.badge {
+    background: #d3d3d3;
+    color: #022027
+}
+
 </style>
   </head>
   <body>
-    <nav class="navbar navbar-default navbar-dynamic-top">
+    <nav class="navbar navbar-inverse navbar-dynamic-top">
       <div class="container">
         <div class="navbar-header">
         </div>
@@ -47,6 +64,7 @@ path {
 
             Region:
             {{ form.region() }}
+
             Summoner name:
             {{ form.summoner() }}
 
