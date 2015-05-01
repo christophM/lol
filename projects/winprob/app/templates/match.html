@@ -84,7 +84,7 @@ var yScale = d3.scale.linear()
 
 
 var formatAsPercentage = d3.format(".0%");
-var winprob_line = {{ match.get_winprob_dataframe() | tojson }}
+var winprob_line = {{ match.get_winprob_dataframe() | safe }}
 
 var lines = svg.selectAll("line")
     .data(winprob_line)
