@@ -1,6 +1,9 @@
-from flask import render_template, flash, redirect, request
-from app import app
+from flask import render_template, flash, redirect, request, Flask
 from .forms import SummonerSearchForm
+
+import sys
+sys.path.append('/home/kuriso/lol/lib/')
+sys.path.append("/home/kuriso/lol/projects/winprob/wpmodel/")
 
 import winprob
 import events
@@ -10,10 +13,8 @@ from constants import PREDICTION_MODEL_PATH
 wp =  model.WinProbabilityPipeline()
 wp.from_file(PREDICTION_MODEL_PATH)
 
-## TODO
-# - create WinProbabilityPipeline when initializing the app (__ini__.py ?)
-# - add additional information about the mach
-# - 
+app = Flask(__name__)
+app.config.from_object("config")
 
 
 @app.route('/')
