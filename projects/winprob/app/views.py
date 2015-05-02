@@ -1,20 +1,24 @@
 from flask import render_template, flash, redirect, request, Flask
 from forms import SummonerSearchForm
 
+import config
+app = Flask(__name__)
+app.config.from_object("config")
+
+
 import sys
-sys.path.append('/home/kuriso/lol/lib/')
-sys.path.append("/home/kuriso/lol/projects/winprob/wpmodel/")
+sys.path.append(config.lib_paths["lol"])
+print config.lib_paths["wpmodel"]
+sys.path.append(config.lib_paths["wpmodel"])
 
 import winprob
 import events
 import model
-from constants import PREDICTION_MODEL_PATH
+
 
 wp =  model.WinProbabilityPipeline()
-wp.from_file(PREDICTION_MODEL_PATH)
+wp.from_file(config.prediction_model_path)
 
-app = Flask(__name__)
-app.config.from_object("config")
 
 
 @app.route('/')
@@ -45,5 +49,5 @@ def match():
     else:
         return render_template('index.html', 
                                form=form)
-
+app.run()
 
