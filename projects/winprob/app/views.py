@@ -8,7 +8,6 @@ app.config.from_object("config")
 
 import sys
 sys.path.append(config.lib_paths["lol"])
-print config.lib_paths["wpmodel"]
 sys.path.append(config.lib_paths["wpmodel"])
 
 import winprob
