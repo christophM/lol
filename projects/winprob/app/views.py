@@ -1,5 +1,5 @@
 from flask import render_template, flash, redirect, request, Flask
-from .forms import SummonerSearchForm
+from forms import SummonerSearchForm
 
 import sys
 sys.path.append('/home/kuriso/lol/lib/')
