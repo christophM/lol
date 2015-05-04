@@ -3,89 +3,92 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title> Path to victory </title>
+    <title> lolchance </title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script src="http://d3js.org/d3.v3.min.js"></script>
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-62555945-1', 'auto');
-  ga('send', 'pageview');
+      ga('create', 'UA-62555945-1', 'auto');
+      ga('send', 'pageview');
 
-</script>
-<style media="screen" type="text/css">
-body {
-    font: 12px Arial;
-    background-color: #022027;
-    color: #d3d3d3
-}
-path {
-    stroke: black;
-    stroke-width: 2;
-    fill: none;
-}
+    </script>
+    <style media="screen" type="text/css">
+      body {
+      font: 12px Arial;
+      background-color: #022027;
+      color: #d3d3d3
+      }
+      path {
+      stroke: black;
+      stroke-width: 2;
+      fill: none;
+      }
 
-.horizontalGrid, .verticalGrid {
-    stroke: grey;
-    stroke-width: 1px;
-}
+      .horizontalGrid, .verticalGrid {
+      stroke: grey;
+      stroke-width: 1px;
+      }
 
-.axis path, .axis line {
-    fill: none;
-    stroke: lightgrey;
-    stroke-width: 0;
-    shape-rendering: crispEdges;
-}
+      .axis path, .axis line {
+      fill: none;
+      stroke: lightgrey;
+      stroke-width: 0;
+      shape-rendering: crispEdges;
+      }
 
-.axis {
-    fill: grey
-}
+      .axis {
+      fill: grey
+      }
 
-.navbar {
-     background-color: #022027;
-}
+      .navbar {
+      background-color: #022027;
+      }
 
 
-.panel, .list-group-item {
-    border: 0px;
-    color: #d3d3d3;
-    background: #022027;
-}
+      .panel, .list-group-item {
+      border: 0px;
+      color: #d3d3d3;
+      background: #022027;
+      }
 
-.badge {
-    background: #d3d3d3;
-    color: #022027
-}
+      .badge {
+      background: #d3d3d3;
+      color: #022027
+      }
 
-</style>
+    </style>
   </head>
   <body>
-    <nav class="navbar navbar-inverse navbar-dynamic-top">
-      <div class="container">
-        <div class="navbar-header">
-        </div>
-        <form class="navbar-form navbar-center" action="/match" method="POST">
+    <nav class="navbar navbar-inverse navbar-dynamic-top" role="search">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/"> lolchance </a>
+      </div>
+<center>
+      <div  id="navbar-main">
+        <form class="navbar-form navbar-center"  action="/match" method="POST" role="search">
           {{ form.hidden_tag() }}
-
-            Region:
-            {{ form.region() }}
-
-            Summoner name:
-            {{ form.summoner() }}
-
-<input type="submit" value="Show me!">
+          <div class="form-group">
+            {{ form.region(class="form_control") }}
+          </div>
+          <div class="form-group">
+            {{ form.summoner(class="form_control", placeholder="Summoner") }}
+          </div>
+          <input type="submit" value="Get match">
         </form>
       </div>
+</center>
     </nav>
-    <div class="container-fluid">
-    {% block content %}{% endblock %}
 </div>
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-  </body>
+<div class="container-fluid">
+  {% block content %}{% endblock %}
+</div>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+</body>
 </html>
