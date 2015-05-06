@@ -52,7 +52,7 @@
 // TODO: Add interactivity to show events by mousehover
 
 var margin = {
-    top: 20,
+    top: 40,
     right: 10,
     bottom: 20,
     left: 40
@@ -150,7 +150,7 @@ svg.selectAll("line.vertcialGrid").data(xScale.ticks(5)).enter()
     .attr({
     "class": "verticalGrid",
         "y1": 0,
-        "y2": height,
+"y2": height,
         "x1": function (d) {
         return xScale(d);
     },
@@ -163,6 +163,15 @@ svg.selectAll("line.vertcialGrid").data(xScale.ticks(5)).enter()
         "stroke-width": "1px",
         "stroke-dasharray": "2, 2"
 });
+
+// Add plot title
+svg.append("text")
+    .attr("x", (width / 2))
+    .attr("y",  0 - (margin.top / 2))
+    .attr("text-anchor", "middle")
+    .attr("fill", "#d3d3d3")
+    .style("font-size", "16px")
+    .text("Win chance for each match minute")
 
 </script>
 
