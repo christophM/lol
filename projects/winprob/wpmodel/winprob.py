@@ -19,11 +19,7 @@ def main(argvs):
     get_last_match_winprob(match, console=True)
 
 def get_last_match(region, summonerName):
-    try:
-        summonerId = json.loads(rawpi.get_summoner_by_name(region, summonerName).text)[summonerName]["id"]
-    except: 
-        print "Could not find summoner"
-    print summonerId
+    summonerId = json.loads(rawpi.get_summoner_by_name(region, summonerName).text)[summonerName]["id"]
 
     ## get last ten matches
     match_history = rawpi.get_matchhistory(region, summonerId)

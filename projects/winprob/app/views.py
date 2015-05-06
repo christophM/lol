@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, request, Flask
+from flask import render_template, flash, redirect, request, Flask, flash, url_for
 from forms import SummonerSearchForm
 
 import config
@@ -30,11 +30,14 @@ def index():
 
 @app.route('/match', methods=('GET', 'POST'))
 def match():
-    image = None
     form = SummonerSearchForm()
     if form.validate_on_submit():
         summoner_name = form.summoner.data.lower()
-        match = winprob.get_last_match(region=form.region.data, summonerName=summoner_name)
+        try: 
+            match = winprob.get_last_match(region=form.region.data, summonerName=summoner_name)
+        except: 
+            flash("Could not find any ranked matches for %s"  % (summoner_name))
+            return redirect(url_for("index"))
         match.set_winprob(wp.predict(match.match, match.teamId))
         winprob_line = match.get_winprob()
         top_events = events.summarize_important_events(match)
@@ -48,5 +51,5 @@ def match():
     else:
         return render_template('index.html', 
                                form=form)
-app.run()
+app.run(debug=True)
 
