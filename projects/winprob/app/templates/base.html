@@ -68,19 +68,22 @@
     <nav class="navbar navbar-inverse navbar-dynamic-top" role="search">
       <div class="navbar-header">
         <a class="navbar-brand" href="/"> lolchance </a>
-      </div>
+      </div> <!--navbar-header -->
+
       <center>
         <div  id="navbar-main">
-          <form class="navbar-form navbar-center"  action="/match" method="POST" role="search">
+          <form class="navbar-form navbar-center form-inline"  action="/match" method="POST" role="search">
             {{ form.hidden_tag() }}
-            <div class="input-group">
+	    <div class="input-group">
+            <div class="form-group">
               {{ form.region(class="form-control") }}
             </div>
-            <div class="input-group">
-              {{ form.summoner(class="form-control", placeholder="Summoner") }}
+            <div class="form-group">
+              {{ form.summoner(class="form-control", placeholder="Summoner", size="30") }}
               <span class="input-group-btn">
                 <button class="btn btn-default" type="submit"> Go! </button>
               </span>
+	      </div>
             </div>
             <!--            <input type="submit" value="Get match"> -->
           </form>
