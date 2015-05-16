@@ -27,7 +27,6 @@ def get_last_match(region, summonerName):
     match_ids = [x["matchId"] for x in match_history]
 
     matchId = match_ids[len(match_ids) - 1]
-    print matchId
     ## download last match
     match = Match(json.loads(rawpi.get_match(region=region, matchId=matchId, includeTimeline=True).text), summonerId)
     return match
