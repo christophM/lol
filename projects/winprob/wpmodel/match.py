@@ -9,22 +9,22 @@ import json
 class Match():
     """ Class for league of legends from the view of a single player"""
 
-    def __init__(self, match_dict, summonerId=None):
+    def __init__(self, match_dict, summonerName=None):
         """ Extracts the first infos of the match
         Keyword arguments:
         match_dict - match of type dictionary containing the match 
-        summonerId - id of type int for the summoner
+        summonerName - summoner name of type string for the summoner
         """
         self.match = match_dict
-        ## if summonerId not provided, then take the first summoner from the game
-        self.summonerId = summonerId if summonerId is not None else self.match["participantIdentities"][0]["player"]["summonerId"]
+        ## if summonerName not provided, then take the first summoner from the game
+        self.summonerName = summonerName if summonerName is not None else self.match["participantIdentities"][0]["player"]["summonerName"]
         self.timestamps = [x["timestamp"] / 60000 for x in self.match["timeline"]["frames"]]
         self.durance = max(self.timestamps)
         
         ## MatchId
         self.matchId = self.match["matchId"]
         ## Extract id of summoner for this game
-        self.participantId = filter(lambda x: x["player"]["summonerId"] == self.summonerId, 
+        self.participantId = filter(lambda x: x["player"]["summonerName"].lower() == self.summonerName.lower(), 
                                     self.match["participantIdentities"])[0]["participantId"]
         ## Extract team id of summoner for this game
         self.teamId = filter(lambda x: x["participantId"] == self.participantId, 

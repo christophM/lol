@@ -28,28 +28,46 @@ def index():
                            form=form)
 
 
-@app.route('/match', methods=('GET', 'POST'))
-def match():
+@app.route('/search', methods=('GET', 'POST'))
+def search():
     form = SummonerSearchForm()
     if form.validate_on_submit():
         summoner_name = form.summoner.data.lower()
+        region = form.region.data
         try: 
-            match = winprob.get_last_match(region=form.region.data, summonerName=summoner_name)
+            summonerId = winprob.get_summoner_id(region, summoner_name)
         except: 
-            flash("Could not find any ranked matches for %s"  % (summoner_name))
+            flash("Could not find summoner with name %s in region %s"  % (summoner_name, region))
             return redirect(url_for("index"))
-        match.set_winprob(wp.predict(match.match, match.teamId))
-        winprob_line = match.get_winprob()
-        top_events = events.summarize_important_events(match)
-        player = match.get_participant_summary()
-        return render_template('match.html', 
-                               form=form, 
-                               match=match, 
-                               events=top_events,
-                               player=player,
-                               summonerName=form.summoner.data)
+        try:
+            matchId = winprob.get_last_match_id(region, summonerId)
+        except:
+            flash("Could not find any ranked matches for summoner %s in region %s" % (summoner_name, region))
+            return redirect(url_for("index"))
+
+        return redirect(url_for("match", region=region, summonerName=summoner_name,  matchId=matchId))
+
     else:
         return render_template('index.html', 
                                form=form)
-app.run(debug=True)
 
+
+
+
+@app.route("/match/<region>/<summonerName>/<matchId>")
+def match(region, summonerName, matchId):
+    form = SummonerSearchForm()
+    last_match = winprob.get_last_match(region=region, matchId=matchId, summonerName=summonerName)    
+    last_match.set_winprob(wp.predict(last_match.match, last_match.teamId))
+    winprob_line = last_match.get_winprob()
+    top_events = events.summarize_important_events(last_match)
+    player = last_match.get_participant_summary()
+    return render_template('match.html', 
+                               form=form, 
+                               match=last_match, 
+                               events=top_events,
+                               player=player,
+                               summonerName=summonerName)
+
+
+app.run(debug=True)    
