@@ -1,179 +1,177 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="">
-<h1> {{ summonerName }}'s latest match </h1>
+<div class="row">
+  <div class="col-md-12">
+    <h1 align="center"> {{ summonerName }} </h1>
+  </div>
+</div> <!-- div class = row-->
+<div class="col-xs-2">
+  <h1 class={% if match.win %}"text-success"{% else %}"text-danger"{% endif %}> {% if match.win %}Victory{% else %}Defeat{% endif %}  </h1>
+  {{ match.date.strftime('%Y-%m-%d at %H:%M') }}
 </div>
 <div class="row">
-  <div class="col-md-2">
-      <h1 class={% if match.win %}"text-success"{% else %}"text-danger"{% endif %}> {% if match.win %} Victory {% else %} Defeat {% endif %}  </h1> 
-      {{ match.date.strftime('%Y-%m-%d at %H:%M') }}
-      </br>
-      </br>
-    <div class="panel panel-info">
-      <ul class="list-group">
-        <!-- <a href="#" class="list-group-item active"> -->
-	<!--   {{ summonerName }}          -->
-        <!-- </a> -->
-        <a class="list-group-item">
-          <span class="badge">    {{ player["champion"] }} </span>
-          Champion
-        </a>
-        <a class="list-group-item">
-          <span class="badge">    {{ player["kills"] }} </span>
-          Kills
-        </a>
-        <a class="list-group-item">
-          <span class="badge">    {{ player["deaths"] }} </span>
-          Deaths
-        </a>
-        <a class="list-group-item">
-          <span class="badge">    {{ player["assists"] }} </span>
-          Assists
-        </a>
-        <a class="list-group-item">
-          <span class="badge">    {{ player["minionsKilled"] }} </span>
-          Minions
-        </a>
-        <a class="list-group-item">
-          <span class="badge">    {{ player["goldEarned"] }} </span>
-          Gold
-        </a>
-      </ul>
+  <div class="col-xs-2">
+    <div align="center">
+      <img src="http://placehold.it/120x120&text=champion", class="img-responsive">
+    </div>
+    <h2 align="center"> {{ player["champion"] }} </h2>
+  </div>
+  <div>
+    <div class="col-xs-2">
+      <div class="panel panel-info">
+        <ul style="list-style-type: none;">
+          <li> Kills: {{ player["kills"] }} </li>
+          <li> Deaths: {{ player["deaths"] }} </li>
+          <li> Assists:    {{ player["assists"] }} </li>
+          <li> Minions: {{ player["minionsKilled"] }} </li>
+          <li> Gold: {{ player["goldEarned"] }} </li>
+        </ul>
+      </div>
+    </div> <!-- match summary div -->
+    <div class="row">
+      <div class="col-xs-12" id="plot">
+      </div>
+    </div> <!-- div class row plot -->
+  </div>
+  <div class="row">
+    <div class="col-xs-10">
+      PLACEHOLDER EVENT BOX
+    </div class="col-xs-2">
+    PLACEHOLDER HELP BOX
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      PLACHOLDER TEAM / SUMMONER INFORMATIONS
     </div>
   </div>
-  <div class="col-md-10" id="plot">
+  <script>
+    // TODO: Move all the styling to CSS
+    // TODO: Add events by adding circles on top of the line
+    // TODO: Add interactivity to show events by mousehover
 
-  </div>
-</div>
-<script>
-// TODO: Move all the styling to CSS
-// TODO: Add events by adding circles on top of the line
-// TODO: Add interactivity to show events by mousehover
-
-var margin = {
+    var margin = {
     top: 40,
     right: 10,
     bottom: 20,
     left: 40
-};
-var width = 960 - margin.left - margin.right,
+    };
+    var width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
 
-var svg_outer = d3.select("#plot").append("svg")
+    var svg_outer = d3.select("#plot").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom);
 
-var svg = svg_outer.append("g")
-.attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+    var svg = svg_outer.append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
     .attr("class", "winprob");
 
 
 
-// TODO: change max to max of data time
+    // TODO: change max to max of data time
 
-var max_timestamp = 60;
-var xScale = d3.scale.linear()
+    var max_timestamp = 60;
+    var xScale = d3.scale.linear()
     .domain([0, max_timestamp])
     .range([0, width]);
 
-var yScale = d3.scale.linear()
+    var yScale = d3.scale.linear()
     .domain([0, 1])
     .range([height, 0]);
 
 
-var formatAsPercentage = d3.format(".0%");
-var winprob_line = {{ match.get_winprob_dataframe() | safe }}
+    var formatAsPercentage = d3.format(".0%");
+    var winprob_line = {{ match.get_winprob_dataframe() | safe }}
 
-var lines = svg.selectAll("line")
+    var lines = svg.selectAll("line")
     .data(winprob_line)
     .enter()
     .append("line");
 
-var lineAttributes = lines.attr("x1", function (d) {
+    var lineAttributes = lines.attr("x1", function (d) {
     return xScale(d.timestamp - 1);
-})
+    })
     .attr("x2", function (d) {
     return xScale(d.timestamp);
-})
+    })
     .attr("y1", function (d) {
     return yScale(d.winprob_before);
-})
+    })
     .attr("y2", function (d) {
     return yScale(d.winprob_now);
-})
+    })
     .style("stroke", "rgb(218,165,32)")
     .style("stroke-width", "4");
 
-//Create the Axis
-var xAxis = d3.svg.axis().scale(xScale).orient("bottom").ticks(5);
-var xAxisGroup = svg.append("g")
+    //Create the Axis
+    var xAxis = d3.svg.axis().scale(xScale).orient("bottom").ticks(5);
+    var xAxisGroup = svg.append("g")
     .attr("class", "axis")
     .attr("transform", "translate(0," + height + ")")
     .call(xAxis);
 
 
-var yPadding = 0;
-var n_y_ticks = 3;
-var yAxis = d3.svg.axis().scale(yScale).orient("left").ticks(n_y_ticks).tickFormat(formatAsPercentage);
+    var yPadding = 0;
+    var n_y_ticks = 3;
+    var yAxis = d3.svg.axis().scale(yScale).orient("left").ticks(n_y_ticks).tickFormat(formatAsPercentage);
 
 
-var yAxisGroup = svg.append("g")
+    var yAxisGroup = svg.append("g")
     .attr("class", "axis")
     .attr("transform", "translate(" + yPadding + ",0)")
     .attr("stroke-width", "1px")
     .call(yAxis);
 
 
-svg.selectAll("line.horizontalGrid").data(yScale.ticks(2)).enter()
+    svg.selectAll("line.horizontalGrid").data(yScale.ticks(2)).enter()
     .append("line")
     .attr({
     "class": "horizontalGrid",
-        "x1": 0,
-        "x2": width,
-        "y1": function (d) {
-        return yScale(d);
+    "x1": 0,
+    "x2": width,
+    "y1": function (d) {
+    return yScale(d);
     },
-        "y2": function (d) {
-        return yScale(d);
+    "y2": function (d) {
+    return yScale(d);
     },
-        "fill": "none",
-        "shape-rendering": "crispEdges",
-        "stroke": "black",
-        "stroke-width": "1px",
-        "stroke-dasharray": "2, 2"
-});
+    "fill": "none",
+    "shape-rendering": "crispEdges",
+    "stroke": "black",
+    "stroke-width": "1px",
+    "stroke-dasharray": "2, 2"
+    });
 
-svg.selectAll("line.vertcialGrid").data(xScale.ticks(5)).enter()
+    svg.selectAll("line.vertcialGrid").data(xScale.ticks(5)).enter()
     .append("line")
     .attr({
     "class": "verticalGrid",
-        "y1": 0,
-"y2": height,
-        "x1": function (d) {
-        return xScale(d);
+    "y1": 0,
+    "y2": height,
+    "x1": function (d) {
+    return xScale(d);
     },
-        "x2": function (d) {
-        return xScale(d);
+    "x2": function (d) {
+    return xScale(d);
     },
-        "fill": "none",
-        "shape-rendering": "crispEdges",
-        "stroke": "black",
-        "stroke-width": "1px",
-        "stroke-dasharray": "2, 2"
-});
+    "fill": "none",
+    "shape-rendering": "crispEdges",
+    "stroke": "black",
+    "stroke-width": "1px",
+    "stroke-dasharray": "2, 2"
+    });
 
-// Add plot title
-svg.append("text")
+    // Add plot title
+    svg.append("text")
     .attr("x", (width / 2))
     .attr("y",  0 - (margin.top / 2))
     .attr("text-anchor", "middle")
     .attr("fill", "#d3d3d3")
     .style("font-size", "16px")
-    .text("Win chance for each match minute")
+    .text("Win chance during match")
 
-</script>
+  </script>
 
-{% endblock %}
-
+  {% endblock %}
