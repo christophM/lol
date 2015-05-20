@@ -48,16 +48,14 @@
 </div>
 <script>
 // TODO: Move all the styling to CSS
-// TODO: Add events by adding circles on top of the line
-// TODO: Add interactivity to show events by mousehover
 
 var margin = {
     top: 40,
     right: 10,
-    bottom: 20,
+    bottom: 80,
     left: 40
 };
-var width = 960 - margin.left - margin.right,
+var width = 720 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
 
@@ -71,9 +69,10 @@ var svg = svg_outer.append("g")
 
 
 
-// TODO: change max to max of data time
+var formatAsPercentage = d3.format(".0%");
+var winprob_line = {{ match.get_winprob_dataframe() | safe }}
 
-var max_timestamp = 60;
+var max_timestamp = Math.round((winprob_line.length + 5)/ 10) * 10;
 var xScale = d3.scale.linear()
     .domain([0, max_timestamp])
     .range([0, width]);
@@ -81,10 +80,6 @@ var xScale = d3.scale.linear()
 var yScale = d3.scale.linear()
     .domain([0, 1])
     .range([height, 0]);
-
-
-var formatAsPercentage = d3.format(".0%");
-var winprob_line = {{ match.get_winprob_dataframe() | safe }}
 
 var lines = svg.selectAll("line")
     .data(winprob_line)
@@ -171,8 +166,15 @@ svg.append("text")
     .attr("text-anchor", "middle")
     .attr("fill", "#d3d3d3")
     .style("font-size", "16px")
-    .text("Win chance for each match minute")
+    .text("Win chance during match")
 
+svg.append("text")
+   .attr("x", (width / 2))
+   .attr("y", height + margin.bottom/2)
+   .attr("text-anchor", "middle")
+   .attr("fill", "lightgrey")
+   .style("font-size", "16px")
+   .text("Match minutes");
 </script>
 
 {% endblock %}
