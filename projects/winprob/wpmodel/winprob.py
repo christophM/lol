@@ -8,19 +8,6 @@ from subprocess import call
 
 
 
-def main(argvs):
-    region = argvs[1]
-    print region
-    ## take summonerId
-    summonerName = argvs[2]
-    print summonerName
-    summonerId = get_summoner_id(region, summonerName)
-    print summonerId
-    matchId = get_last_match_id(region, summonerId)
-    ## get summonerID
-    match = get_last_match(region, matchId, summonerName)
-    get_last_match_winprob(match, console=True)
-
 def get_summoner_id(region, summonerName):
     """Wraps the API handler to get the id by name"""
     return json.loads(rawpi.get_summoner_by_name(region, summonerName).text)[summonerName]["id"]
