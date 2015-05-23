@@ -26,7 +26,10 @@ def index():
     form = SummonerSearchForm()
     return render_template('index.html', 
                            form=form)
-
+@app.route("/about")
+def about():
+    form = SummonerSearchForm()
+    return render_template("about.html", form=form)
 
 @app.route('/search', methods=('GET', 'POST'))
 def search():
