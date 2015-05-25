@@ -21,7 +21,9 @@ import model
 wp =  model.WinProbabilityPipeline()
 wp.from_file(config.prediction_model_path)
 
-
+@app.route("/riot.txt")
+def riot():
+    return "ee2df09a-886e-4dcb-a1ec-7d83055d5f93"
 
 @app.route('/')
 @app.route('/index')
