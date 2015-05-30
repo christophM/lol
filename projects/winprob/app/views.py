@@ -1,25 +1,32 @@
 from flask import render_template, flash, redirect, request, Flask, flash, url_for
 from forms import SummonerSearchForm
 from flask.ext.cache import Cache
-
-import config
-app = Flask(__name__)
-app.config.from_object("config")
-
-cache = Cache(app,config={'CACHE_TYPE': 'simple'})
-
-
 import sys
+import config
 sys.path.append(config.lib_paths["lol"])
 sys.path.append(config.lib_paths["wpmodel"])
 
 import winprob
 import events
 import model
+import apiwrap
 
 
+### Initialize stuff
+app = Flask(__name__)
+app.config.from_object("config")
+
+cache = Cache(app,config={'CACHE_TYPE': 'simple'})
+
+## Intialize win probability model
 wp =  model.WinProbabilityPipeline()
 wp.from_file(config.prediction_model_path)
+
+
+
+champion_map = apiwrap.get_champion_map()
+
+
 
 @app.route("/riot.txt")
 def riot():
@@ -79,12 +86,14 @@ def match(region, summonerName, matchId):
     winprob_line = last_match.get_winprob()
     top_events = events.summarize_important_events(last_match)
     player = last_match.get_participant_summary()
+    champion = champion_map[player["championId"]]
     return render_template('match.html', 
-                               form=form, 
-                               match=last_match, 
-                               events=top_events,
-                               player=player,
-                               summonerName=summonerName)
+                           form=form, 
+                           match=last_match, 
+                           events=top_events,
+                           player=player,
+                           summonerName=summonerName, 
+                           champion=champion)
 
 
 app.run(debug=True)    

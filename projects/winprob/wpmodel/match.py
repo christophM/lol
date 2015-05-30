@@ -79,8 +79,4 @@ class Match():
         if not participantId:
             participantId = self.participantId
         player = filter(lambda x: x["participantId"] == self.participantId, self.match["participants"])[0]
-        stats = player["stats"]
-        champ = rawpi.get_champion_list_by_id(self.region, player["championId"])
-        stats.setdefault("champion", json.loads(champ.text)["name"])
-        ## kills, deaths, assists, champion name, gold, minion kills,  role (nice-to-have)
-        return stats
+        return player

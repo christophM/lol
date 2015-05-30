@@ -4,6 +4,25 @@
 <div class="">
 <h1> {{ summonerName }}'s latest match </h1>
 </div>
+<img src="{{ url_for('static', filename='img/champion/%s.png' % (player['championId'])) | safe}}" width="144" height="144">
+<img src="{{ url_for('static', filename='img/spell/%s.png' % (player['spell1Id']) ) }}"
+     width="72" height="72">
+<img src="{{ url_for('static', filename='img/spell/%s.png' % (player['spell2Id']) ) }}" width="72" height="72">
+<img src="{{ url_for('static', filename='img/item/%s.png' % (player['stats']['item0']) )
+	  }}" width="72" height="72">
+<img src="{{ url_for('static', filename='img/item/%s.png' % (player['stats']['item1']) )
+	  }}" width="72" height="72">
+<img src="{{ url_for('static', filename='img/item/%s.png' % (player['stats']['item2']) )
+	  }}" width="72" height="72">
+<img src="{{ url_for('static', filename='img/item/%s.png' % (player['stats']['item3']) )
+	  }}" width="72" height="72">
+<img src="{{ url_for('static', filename='img/item/%s.png' % (player['stats']['item4']) )
+	  }}" width="72" height="72">
+<img src="{{ url_for('static', filename='img/item/%s.png' % (player['stats']['item5']) )
+	  }}" width="72" height="72">
+<img src="{{ url_for('static', filename='img/item/%s.png' % (player['stats']['item6']) ) }}" width="72" height="72">
+
+
 <div class="row">
   <div class="col-md-2">
       <h1 class={% if match.win %}"text-success"{% else %}"text-danger"{% endif %}> {% if match.win %} Victory {% else %} Defeat {% endif %}  </h1> 
@@ -16,27 +35,27 @@
 	<!--   {{ summonerName }}          -->
         <!-- </a> -->
         <a class="list-group-item">
-          <span class="badge">    {{ player["champion"] }} </span>
+          <span class="badge">    {{ champion }} </span>
           Champion
         </a>
         <a class="list-group-item">
-          <span class="badge">    {{ player["kills"] }} </span>
+          <span class="badge">    {{ player["stats"]["kills"] }} </span>
           Kills
         </a>
         <a class="list-group-item">
-          <span class="badge">    {{ player["deaths"] }} </span>
+          <span class="badge">    {{ player["stats"]["deaths"] }} </span>
           Deaths
         </a>
         <a class="list-group-item">
-          <span class="badge">    {{ player["assists"] }} </span>
+          <span class="badge">    {{ player["stats"]["assists"] }} </span>
           Assists
         </a>
         <a class="list-group-item">
-          <span class="badge">    {{ player["minionsKilled"] }} </span>
+          <span class="badge">    {{ player["stats"]["minionsKilled"] }} </span>
           Minions
         </a>
         <a class="list-group-item">
-          <span class="badge">    {{ player["goldEarned"] }} </span>
+          <span class="badge">    {{ player["stats"]["goldEarned"] }} </span>
           Gold
         </a>
       </ul>
