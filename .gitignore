@@ -1,4 +1,6 @@
 
+# Whatever file type this is
+.DS_Store
 # python virtualenv
 venv
 
