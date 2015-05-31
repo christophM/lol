@@ -40,3 +40,12 @@ path {
     background: #d3d3d3;
     color: #022027
 }
+
+
+.summaryCardElement {
+    display: inline-block;
+    vertical-align: middle;
+    padding-right: 5px;
+}
+
+.top-buffer { margin-top:80px; }
