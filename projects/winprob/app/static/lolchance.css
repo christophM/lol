@@ -49,3 +49,8 @@ path {
 }
 
 .top-buffer { margin-top:80px; }
+
+
+rect.highlight {
+    opacity: 0.8;
+}
