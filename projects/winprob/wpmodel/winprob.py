@@ -14,9 +14,9 @@ def get_summoner_id(region, summonerName):
 
 def get_last_match_id(region, summonerId):
     ## get last fifteen matches
-    match_history = rawpi.get_matchhistory(region, summonerId)
-    match_history = json.loads(match_history.text)["matches"]
-    match_ids = [x["matchId"] for x in match_history]
+    match_list = rawpi.get_matchlist(region, summonerId)
+    match_list = json.loads(match_list.text)["matches"]
+    match_ids = [x["matchId"] for x in match_list]
 
     matchId = match_ids[len(match_ids) - 1]
     return matchId

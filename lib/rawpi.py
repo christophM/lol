@@ -256,12 +256,12 @@ def get_match(region, matchId, includeTimeline):
 # MATCHHISTORY-v2.2
 
 
-def get_matchhistory(region, summonerId):
+def get_matchlist(region, summonerId):
     """
-    Retrieve match history by summoner ID.
+    Retrieve match list by summoner ID.
     """
     return requests.get(
-        (REGION_ENDPOINT + "v2.2/matchhistory/{1}?"
+        (REGION_ENDPOINT + "v2.2/matchlist/by-summoner/{1}?"
          "api_key={2}").
         format(region, summonerId, KEY))
 
