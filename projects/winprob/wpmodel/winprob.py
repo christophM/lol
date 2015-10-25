@@ -18,7 +18,7 @@ def get_last_match_id(region, summonerId):
     match_list = json.loads(match_list.text)["matches"]
     match_ids = [x["matchId"] for x in match_list]
 
-    matchId = match_ids[len(match_ids) - 1]
+    matchId = match_ids[0]
     return matchId
 
 
